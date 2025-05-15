@@ -2,6 +2,7 @@ import re
 from typing import Optional, Annotated
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
+from models import RoleEnum
 
 
 class ContactModel(BaseModel):
@@ -23,6 +24,15 @@ class ContactModel(BaseModel):
 class ContactModelResponse(ContactModel):
     id: str
     
+class UserModel(BaseModel):
+    username: Annotated[str, Field(...)]
+    password: str
+    email: EmailStr
     
+
+class UserModelResponse(UserModel):
+    id: str
+    is_active: bool
+    role: RoleEnum
 
     
