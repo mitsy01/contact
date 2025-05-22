@@ -1,5 +1,6 @@
 import re
 from typing import Optional, Annotated
+from datetime import datetime, date
 
 from pydantic import BaseModel, EmailStr, Field, field_validator
 from models import RoleEnum
@@ -25,9 +26,9 @@ class ContactModelResponse(ContactModel):
     id: str
     
 class UserModel(BaseModel):
-    username: Annotated[str, Field(...)]
-    password: str
-    email: EmailStr
+    username: Annotated[str, Field(..., description="Ім'я користувача.", min_length=2, max_length=100)]
+    password: Annotated[str, Field(..., description="Пароль.", min_length=10, max_length=100)]
+    email: Annotated[EmailStr, Field(..., description="Email.", min_length=2, max_length=100)]
     
 
 class UserModelResponse(UserModel):
@@ -35,4 +36,26 @@ class UserModelResponse(UserModel):
     is_active: bool
     role: RoleEnum
 
+
+class ArticleModel(BaseModel):
+    titile: Annotated[str, Field(..., description="Заголовок.", min_length=5, max_length=100)]
+    author: Annotated[str, Field(..., description="Автор.", min_length=5, max_length=100)]
+    author_email: Annotated[EmailStr, Field(..., description="Email автора.", min_length=5, max_length=100)]
+    content: Annotated[str, Field(..., description="Зміст статті.", min_length=5, max_length=100)]
+    created: Annotated[Optional[datetime], Field(None, description="Дата випуску статті.", default_factory=datetime.now)]
     
+    
+class ArticleModelResponse(ArticleModel):
+    id: str
+    created: Annotated[Optional[datetime], Field(description="Дата випуску статті.", default_factory=datetime.now)]
+    
+    
+class CommentModel(BaseModel):
+    comment:  Annotated[str, Field(..., description="Зміст коментаря.", min_length=5, max_length=100)]
+    author_com:  Annotated[str, Field(..., description="Автор коментаря.", min_length=5, max_length=100)]
+    created_com:  Annotated[Optional[datetime], Field(None, description="Дата створення коментаря.", default_factory=datetime.now)]
+    
+
+class CommentModelResponse(CommentModel):
+    id: str
+    created_com:  Annotated[Optional[datetime], Field(None, description="Дата створення коментаря.", default_factory=datetime.now)]

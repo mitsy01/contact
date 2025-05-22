@@ -3,9 +3,10 @@ from typing import Optional
 from uuid import uuid4
 import asyncio
 from enum import Enum, auto
+from datetime import datetime, date
 
 
-from sqlalchemy import String, create_engine, Text, Boolean
+from sqlalchemy import String, create_engine, Text, Boolean, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, declarative_base, Session
 from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from dotenv import load_dotenv
@@ -54,7 +55,25 @@ class User(Base):
         super().__init__(**kwargs)
         self.id = uuid4().hex
 
+
+class Article(Base):
+    __tablename__ = "articles"
+        
+    id: Mapped[str] = mapped_column(String(100), primary_key=True)
+    title: Mapped[str] = mapped_column(String(100))
+    author: Mapped[str] = mapped_column(Text())
+    author_email: Mapped[str] = mapped_column(String(100))
+    content: Mapped[str] = mapped_column(String(100))
+    created: Mapped[datetime] = mapped_column(default=datetime.now())
     
+    
+class Comment(Base):
+    __tablename__ = "comments"
+        
+    id: Mapped[str] = mapped_column(String(100), primary_key=True)
+    comment: Mapped[str] = mapped_column(String(100))
+    author_com: Mapped[str] = mapped_column(String(100))
+    created_com: Mapped[datetime] = mapped_column(default=datetime.now())
 
 
 

@@ -29,7 +29,7 @@ async def get_user(token: str = Depends(OAuth2PasswordBearer("/users/token/")), 
 @users_router.post("/", status_code=status.HTTP_201_CREATED)
 async def add_user(user_model: UserModel, db: AsyncSession = Depends(get_db)):
     user = User(**user_model.model_dump())
-    db.add()
+    db.add(user)
     await db.commit()
 
 
